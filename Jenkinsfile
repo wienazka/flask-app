@@ -33,7 +33,7 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    sh 'helm upgrade --install demo-app ./demo-app --set image.repository=your-dockerhub-username/demo-app --set image.tag=latest'
+                    sh 'helm upgrade --install demo-app ./demo-app --set image.repository=wienazka/flask-app --set image.tag=latest'
                 }
             }
         }
