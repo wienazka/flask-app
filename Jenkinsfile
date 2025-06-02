@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/wienazka/flask-app.git'
+                git branch: 'main', url: 'https://github.com/wienazka/flask-app.git'
             }
         }
 
