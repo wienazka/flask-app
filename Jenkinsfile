@@ -23,6 +23,6 @@ pipeline {
             steps {
                 sh 'docker push wienazka/flask-app:latest'
             }
-        }
-    }
+        }
+    }
 }
