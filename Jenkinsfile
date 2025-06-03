@@ -1,36 +1,28 @@
 pipeline {
     agent any
-
     environment {
-        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-creds')
-        DOCKER_IMAGE = "wienazka/flask-app:latest"
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
     }
-
     stages {
-
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/wienazka/flask-app.git', branch: 'main'
+            }
+        }
         stage('Build Docker Image') {
             steps {
-                script {
-                    bat 'docker build -t $DOCKER_IMAGE .'
-                }
+                sh 'docker build -t wienazka/flask-app:latest .'
             }
         }
-
+        stage('Docker Login') {
+            steps {
+                sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
+            }
+        }
         stage('Push Docker Image') {
             steps {
-                script {
-                    bat "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
-                    bat 'docker push $DOCKER_IMAGE'
-                }
+                sh 'docker push wienazka/flask-app:latest'
             }
-        }
-
-        stage('Deploy to Kubernetes') {
-            steps {
-                script {
-                    bat 'helm upgrade --install demo-app ./demo-app --set image.repository=wienazka/flask-app --set image.tag=latest'
-                }
-            }
-        }
-    }
+        }
+    }
 }
